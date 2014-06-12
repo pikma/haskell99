@@ -63,7 +63,7 @@ encodeModified' l = reverse $ aux l []
 decodeModified = reverse . (foldl f [])
   where f res (Single x) = x:res
         f res (Multiple (n, x)) = (replicate n x) ++ res
--- Note: should have used concatMap.
+-- Note: I should have used concatMap.
 
 encodeDirect l = reverse $ aux l [] where
   aux []      ll = ll
@@ -75,3 +75,6 @@ encodeDirect l = reverse $ aux l [] where
         takeWhileAndCount l = aux' 0 l where
           aux' n [] = (n, [])
           aux' n l@(x':xs) = if x' == x then aux' (1+n) xs else (n, l)
+
+dupli = foldr f []
+  where f e res = e:e:res
