@@ -78,3 +78,27 @@ encodeDirect l = reverse $ aux l [] where
 
 dupli = foldr f []
   where f e res = e:e:res
+
+repli l n = foldr f [] l
+  where f e res = (replicate n e) ++ res
+
+dropEvery l n = let (result, _) = foldl f ([], n) l in reverse result
+  where f (acc, m) e = if (m == 1) then (acc, n) else (e:acc, m-1)
+
+split l n = let (left, right) = f ([], l) n in (reverse left, right) where
+  f (left, []) _ = (left, [])
+  f a 0 = a
+  f (left, x:xs) n = f (x:left, xs) (n-1)
+
+-- We use 0-indexing, no way.
+slice l n m = let (_, right) = split l n in
+              let (result, _) = split right (m-n) in result
+
+rotate l n
+  | n >= 0 = let (left, right) = split l (rem n $ length l) in right ++ left
+  | n < 0  = rotate l (length l + n)
+
+removeAt l n = f $  split l n
+  where f (left, []) = error "Index not in range"
+        f (left, x:xs) = (x, left ++ xs)
+
