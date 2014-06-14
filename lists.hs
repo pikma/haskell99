@@ -43,7 +43,7 @@ pack (x:xs) = reverse $ pack' xs [x] []
 
 encode l = map (\x -> (length x, head x)) (pack l)
 
--- Solutions to the problems 1-10, at
+-- Solutions to the problems 11-20, at
 -- http://www.haskell.org/haskellwiki/99_questions/11_to_20
 
 data Encoding a = Multiple (Int, a) | Single a
@@ -86,8 +86,8 @@ dropEvery l n = let (result, _) = foldl f ([], n) l in reverse result
   where f (acc, m) e = if (m == 1) then (acc, n) else (e:acc, m-1)
 
 split l n = let (left, right) = f ([], l) n in (reverse left, right) where
-  f (left, []) _ = (left, [])
   f a 0 = a
+  f (left, []) _ = error "Index not in range"
   f (left, x:xs) n = f (x:left, xs) (n-1)
 
 -- We use 0-indexing, no way.
@@ -101,4 +101,12 @@ rotate l n
 removeAt l n = f $  split l n
   where f (left, []) = error "Index not in range"
         f (left, x:xs) = (x, left ++ xs)
+
+-- Solutions to the problems 21-28, at
+-- http://www.haskell.org/haskellwiki/99_questions/21_to_28
+
+insertAt e l n = let (left, right) = split l n in left ++ e:right
+
+range n m = f m [] where f x l = if x < n then l else f (x-1) (x:l)
+
 
